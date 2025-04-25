@@ -6,11 +6,12 @@ class NlpHelper
 {
 	static function isValidQuestion($sentence) {
 		$sentence = trim($sentence);
-		
+		/*
 		// Harus diakhiri tanda tanya
 		if (!preg_match('/\?\s*$/', $sentence)) {
 			return false;
 		}
+		*/
 
 		// Daftar kata tanya awal (bahasa Indo dan Inggris)
 		$questionStarters = [

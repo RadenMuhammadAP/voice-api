@@ -8,27 +8,20 @@ use App\Helpers\NlpHelper;
 
 class VoiceController extends Controller
 {
-    protected $chatGPTService;
+    protected $voiceService;
 
-    public function __construct(ChatGPTService $chatGPTService)
+    public function __construct(VoiceService $voiceService)
     {
-        $this->chatGPTService = $chatGPTService;
+        $this->voiceService = $voiceService;
     }
 		
     public function store(Request $request)
     {
         $prompt = $request->input('text');
-		if(NlpHelper::isValidQuestion($prompt)){
-			$response = $this->chatGPTService->generateResponse($prompt);
-			return response()->json([
-				'question' => $prompt, 
-				'answered: ' => $response['choices'][0]['message']['content'],
-			]);			
-		}else{
-			return response()->json([
-				'question' => $prompt,
-				'answered: ' => ''	
-			]);						
-		}
+		$response = $this->voiceService->generateResponse($prompt);
+		return response()->json([
+			'response' => $prompt,
+			'answered' => $response,
+		]);			
     }
 }
