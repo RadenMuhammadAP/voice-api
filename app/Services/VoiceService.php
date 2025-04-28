@@ -34,6 +34,11 @@ class VoiceService
 		foreach ($phrases as $word) {
 			$results = DB::table('data_filtering')->where('key', '=', $word)->first();
 			if(!empty($results)){			
+				DB::table('history')->insert([
+					'question' => $word,
+					'answer' => $results->value,
+					'created_at' => now()
+				]);				
 				return $results->value;			
 			}
 		}
@@ -47,15 +52,17 @@ class VoiceService
 				['role' => 'user', 'content' => $prompt],
 			],
 		]);		
-	
 		if ($response->successful()) {
+			DB::table('history')->insert([
+				'question' => $word,
+				'answer' => $response->json()['choices'][0]['message']['content']
+			]);				
 			return $response->json()['choices'][0]['message']['content'];
 		} else {
-			// Handle error
 			return response()->json([
 				'error' => 'Something went wrong',
 				'details' => $response->json()
 			], $response->status());
-		}			
+		}
     }
 }
